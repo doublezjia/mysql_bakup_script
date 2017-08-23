@@ -1,7 +1,7 @@
 # mysql_bakup_script
 python mysql bakup script
 
-环境：python 3.x 
+环境：python 3.x
 使用类库 os sys time datetime pymysql
 因为这里用的是python3.x 所以要用pymysql来连接Mysql
 pymysql 是第三方的库，所以要先安装 ，可通过 pip install pymysql 进行安装
