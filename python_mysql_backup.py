@@ -20,7 +20,7 @@
 # mysql bin目录 
 # mysqldir = r'D:/Program Files/phpStudy/MySQL/bin'
 # 备份文件目录
-# bakupfiledir = r'F:\mysqlbakup'
+# backupfiledir = r'F:\mysqlbakup'
 # 脚本的日志目录
 # logdir=r'C:\Users\yw0682\Desktop\mysql_bakup_script\log'
 #
@@ -39,9 +39,9 @@ import os,sys,time,datetime,pymysql
 # mysql bin目录 
 mysqldir = r'D:/Program Files/phpStudy/MySQL/bin'
 # 备份文件目录
-bakupfiledir = r'F:\mysqlbakup'
+backupfiledir = r'F:\mysqlbakup'
 # 脚本的日志目录
-logdir=r'C:\Users\yw0682\Desktop\mysql_bakup_script\log'
+logdir=r'C:\Users\yw0682\Desktop\mysql_backup_script\log'
 
 
 # 获取时间 用于下面函数的判断删除是否为一个月以上的文件
@@ -63,15 +63,15 @@ mysqldatabase = 'phptest'
 charset = 'utf8'
 
 # 备份文件名
-bakupfile_name = mysqldatabase+'-'+today.strftime('%Y-%m-%d')+'.sql'
-bakupfile = bakupfiledir+'\\'+ bakupfile_name
+backupfile_name = mysqldatabase+'-'+today.strftime('%Y-%m-%d')+'.sql'
+backupfile = backupfiledir+'\\'+ backupfile_name
 
 # 用mysqldump 备份
-mysqlbakup = 'mysqldump -u'+mysqluser+' -p'+mysqlpwd+' --flush-logs '+mysqldatabase+' > '+bakupfile
+mysqlbakup = 'mysqldump -u'+mysqluser+' -p'+mysqlpwd+' --flush-logs '+mysqldatabase+' > '+backupfile
 
 
 # 日志目录和日志内容
-bakup_logfile = logdir+'\Bakup_log.log'
+backup_logfile = logdir+'\Backup_log.log'
 remove_logfile = logdir+'\Remove_log.log' 
 error_logfile = logdir+'\error_log.log'
 
@@ -91,7 +91,7 @@ def mysql_con():
 
 
 # 数据库备份
-def mysql_bakup():
+def mysql_backup():
 	# 到mysql的bin目录
 	os.chdir(mysqldir)
 	# 连接数据库，判断是否数据库是否正常连接
@@ -100,9 +100,9 @@ def mysql_bakup():
 		# 备份数据库
 		os.system(mysqlbakup)
 		# 备份日志文件内容
-		Bakup_log = '[Bakup] Bakup Successfully. The file is '+bakupfile_name+'. -------------- '+today.strftime('%Y-%m-%d %H:%M:%S')+'\n'
+		Bakup_log = '[Backup] Backup Successfully. The file is '+backupfile_name+'. -------------- '+today.strftime('%Y-%m-%d %H:%M:%S')+'\n'
 		# 写入日志
-		with open(bakup_logfile,'a') as f:
+		with open(backup_logfile,'a') as f:
 			f.write(Bakup_log)
 	else:
 		error_log = '[Error] MySQL connect Error.----------------- '+today.strftime('%Y-%m-%d %H:%M:%S')+'\n'
@@ -112,9 +112,9 @@ def mysql_bakup():
 
 
 # 删除一个月前的备份文件
-def remove_bakup():
+def remove_backup():
 	# 到备份文件目录
-	os.chdir(bakupfiledir)
+	os.chdir(backupfiledir)
 	# 查找所有文件并删除30天以上的文件
 	for i in os.listdir('.'):
 		if os.path.isfile(i):
@@ -125,7 +125,7 @@ def remove_bakup():
 				# 删除文件
 				os.remove(i)
 				# 删除日志内容
-				remove_log = '[Remove] Remove Bakup File '+i+' Successfully. ---------------- '+ today.strftime('%Y-%m-%d %H:%M:%S')+'\n'
+				remove_log = '[Remove] Remove Backup File '+i+' Successfully. ---------------- '+ today.strftime('%Y-%m-%d %H:%M:%S')+'\n'
 				# 写入日志
 				with open(remove_logfile,'a') as f:
 					f.write(remove_log)
@@ -134,9 +134,9 @@ def remove_bakup():
 
 if __name__ == '__main__' :
 	# 备份
-	mysql_bakup()
+	mysql_backup()
 	# 删除超过时间的备份文件
-	remove_bakup()
+	remove_backup()
 
 
 
